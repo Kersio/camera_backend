@@ -11,7 +11,9 @@ class Settings(BaseSettings):
     database_url: str
 
     jwt_secret_key: str
-    jwt_algorithm: str = "HS256"
+    jwt_algorithm: str = "HS256"    
+    jwt_issuer: str = "video-surveillance-backend"
+    jwt_audience: str = "video-surveillance-api"
     access_token_expire_minutes: int = 15
     refresh_token_expire_days: int = 7
 
