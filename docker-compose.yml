@@ -1,0 +1,54 @@
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: surveillance_db
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-surveillance_db}
+      POSTGRES_USER: ${POSTGRES_USER:-surveillance}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${POSTGRES_USER:-surveillance} -d ${POSTGRES_DB:-surveillance_db}
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: surveillance_api
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-surveillance}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-surveillance_db}
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - .:/app
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
