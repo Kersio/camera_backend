@@ -7,6 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.core.config import settings
 from app.core.database import engine
+from app.modules.auth.router import router as auth_router
 
 
 @asynccontextmanager
@@ -22,6 +23,8 @@ app = FastAPI(
     debug=settings.debug,
     lifespan=lifespan,
 )
+
+app.include_router(auth_router)
 
 
 @app.get("/health", tags=["Health"])

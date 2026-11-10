@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "video-surveillance-backend"
+name = "Спасение от vlaDicka"
 version = "0.1.0"
 description = "Backend for intelligent video surveillance system"
 requires-python = ">=3.12,<3.13"
@@ -34,6 +34,7 @@ packages = ["app"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+asyncio_default_test_loop_scope = "session"
 
 [tool.ruff]
 line-length = 88
